@@ -1,10 +1,6 @@
-# VIGENERE-CIPHER
-## EX. NO: 4
- 
-
-## IMPLEMETATION OF VIGENERE CIPHER
- 
-
+# EX.NO:4- VIGENERE-CIPHER
+## Submitted By: SANJAY M
+## Reference Number: 212223230187
 ## AIM:
 
 To implement the Vigenere Cipher substitution technique using C program.
@@ -19,18 +15,88 @@ alphabet shifted cyclically to the left compared to the previous alphabet, corre
 
 ## ALGORITHM:
 
-STEP-1: Arrange the alphabets in row and column of a 26*26 matrix.
-STEP-2: Circulate the alphabets in each row to position left such that the first letter is attached to last.
-STEP-3: Repeat this process for all 26 rows and construct the final key matrix.
-STEP-4: The keyword and the plain text is read from the user.
-STEP-5: The characters in the keyword are repeated sequentially so as to match with that of the plain text.
-STEP-6: Pick the first letter of the plain text and that of the keyword as the row indices and column indices respectively.
-STEP-7: The junction character where these two meet forms the cipher character.
-STEP-8: Repeat the above steps to generate the entire cipher text.
+1. Input: Plaintext (P) and key (K).
+2. Repeat: Repeat the key K until it matches the length of P.
+3. Shift: For each character in P, shift it by the corresponding key character
+(using modulo 26).
+4. Encrypt: For each letter in plaintext P[i], compute C[i] = (P[i] + K[i])
+% 26, where P[i] and K[i] are converted to numbers (A=0, B=1, ..., Z=25).
+5. Output: Combine the resulting characters to form the ciphertext (C).
+6. Finish: Return the ciphertext.
 
 
 ## PROGRAM
-
+```
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+void sanitizeKey(char key[]) {
+int j = 0;
+for (int i = 0; key[i] != '\0'; i++) {
+if (isalpha(key[i])) {
+key[j++] = key[i];
+}
+}
+key[j] = '\0';
+}
+void vigenereEncrypt(char text[], const char key[]) {
+int textLen = strlen(text);
+int keyLen = strlen(key);
+int keyIndex = 0;
+for (int i = 0; i < textLen; i++) {
+char c = text[i];
+if (isalpha(c)) {
+char keyChar = toupper(key[keyIndex % keyLen]);
+if (isupper(c)) {
+text[i] = ((c - 'A' + (keyChar - 'A')) % 26) + 'A';
+} else {
+text[i] = ((c - 'a' + (keyChar - 'A')) % 26) + 'a';
+}
+keyIndex++;
+}
+}
+}
+void vigenereDecrypt(char text[], const char key[]) {
+int textLen = strlen(text);
+int keyLen = strlen(key);
+int keyIndex = 0;
+for (int i = 0; i < textLen; i++) {
+char c = text[i];
+if (isalpha(c)) {
+char keyChar = toupper(key[keyIndex % keyLen]);
+if (isupper(c)) {
+text[i] = ((c - 'A' - (keyChar - 'A') + 26) % 26) + 'A';
+} else {
+text[i] = ((c - 'a' - (keyChar - 'A') + 26) % 26) + 'a';
+}
+keyIndex++;
+}
+}
+}
+int main() {
+char key[100], message[1000];
+printf("Enter encryption key (only letters): ");
+fgets(key, sizeof(key), stdin);
+key[strcspn(key, "\n")] = 0;
+sanitizeKey(key);
+if (strlen(key) == 0) {
+printf("Error: Key cannot be empty after removing spaces!\n");
+return 1;
+}
+printf("Enter message to encrypt: ");
+fgets(message, sizeof(message), stdin);
+message[strcspn(message, "\n")] = 0;
+printf("\nOriginal Message: %s\n", message);
+vigenereEncrypt(message, key);
+printf("Encrypted Message: %s\n", message);
+vigenereDecrypt(message, key);
+printf("Decrypted Message: %s\n", message);
+return 0;
+}
+```
 ## OUTPUT
+![image](https://github.com/user-attachments/assets/36d3c396-1360-4bf9-9e31-7ad7a83798b6)
+
 
 ## RESULT
+The program is executed successfully
